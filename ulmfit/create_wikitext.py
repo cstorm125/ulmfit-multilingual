@@ -11,7 +11,13 @@ import json
 from shutil import copyfile
 
 from sacremoses import MosesTokenizer
-
+from pythainlp.tokenize import word_tokenize
+class ThaiNLPTokenizer:
+    def __init__(self,engine='ulmfit'):
+        self.engine='ulmfit'
+    def tokenize(self, t, return_str=True):
+        res = word_tokenize(t,self.engine)
+        return ' '.join(res) if return_str else res
 
 def get_texts(root):
     for dir_ in root.iterdir():
@@ -72,7 +78,7 @@ def main(args):
     assert input_path.exists(), f'Error: {input_path} does not exist.'
     output.mkdir(exist_ok=True)
 
-    mt = MosesTokenizer(args.lang)
+    mt = MosesTokenizer(args.lang) if args.lang != 'th' else ThaiNLPTokenizer()
 
     sml_wiki = output / f'{args.lang}-2'
     lrg_wiki = output / f'{args.lang}-100'
